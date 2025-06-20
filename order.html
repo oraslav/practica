@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка на оценку | Оценочная компания</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Дополнительные стили для формы заявки */
+        .order-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .order-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .order-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray);
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--gray);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .step-title {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .step.active .step-title {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .step.completed .step-title {
+            color: var(--accent);
+        }
+        
+        .form-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .form-group.required label::after {
+            content: ' *';
+            color: #e74c3c;
+        }
+        
+        .service-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .service-option {
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .service-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .service-option.selected {
+            border-color: var(--accent);
+            background: rgba(230, 126, 34, 0.05);
+        }
+        
+        .service-option i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            text-align: center;
+            margin: 1rem 0 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="about.html">О компании</a>
+        <a href="services.html">Услуги</a>
+        <a href="contacts.html">Контакты</a>
+        <a href="docs.html">Документы</a>
+    </nav>
+    
+    <!-- Шапка -->
+    <header class="animate" style="animation-delay: 0.1s">
+        <h1>Оставить заявку на оценку</h1>
+        <p>Заполните форму, и наш специалист свяжется с вами в течение 30 минут</p>
+    </header>
+    
+    <!-- Основное содержимое -->
+    <main>
+        <div class="order-container animate" style="animation-delay: 0.2s">
+            <!-- Шаги формы -->
+            <div class="order-steps">
+                <div class="step active" id="step1-indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Тип услуги</div>
+                </div>
+                <div class="step" id="step2-indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Детали</div>
+                </div>
+                <div class="step" id="step3-indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Контакты</div>
+                </div>
+                <div class="step" id="step4-indicator">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Подтверждение</div>
+                </div>
+            </div>
+            
+            <!-- Форма заявки -->
+            <form id="orderForm">
+                <!-- Шаг 1: Выбор услуги -->
+                <div class="form-section active" id="step1">
+                    <h2 class="section-title">Выберите тип оценки</h2>
+                    <div class="service-options">
+                        <div class="service-option" data-service="realty">
+                            <i class="fas fa-home"></i>
+                            <h3>Недвижимость</h3>
+                            <p>Квартиры, дома, земля, коммерческая недвижимость</p>
+                        </div>
+                        <div class="service-option" data-service="transport">
+                            <i class="fas fa-car"></i>
+                            <h3>Транспорт</h3>
+                            <p>Автомобили, спецтехника, водный транспорт</p>
+                        </div>
+                        <div class="service-option" data-service="business">
+                            <i class="fas fa-briefcase"></i>
+                            <h3>Бизнес</h3>
+                            <p>Предприятия, доли, нематериальные активы</p>
+                        </div>
+                        <div class="service-option" data-service="other">
+                            <i class="fas fa-question-circle"></i>
+                            <h3>Другое</h3>
+                            <p>Иное имущество или специальная оценка</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="serviceType" name="serviceType" required>
+                    
+                    <div class="form-navigation">
+                        <div></div> <!-- Пустой div для выравнивания -->
+                        <button type="button" class="btn btn-next" onclick="nextStep(1)">Далее</button>
+                    </div>
+                </div>
+                
+                <!-- Шаг 2: Детали заявки -->
+                <div class="form-section" id="step2">
+                    <h2 class="section-title">Детали заявки</h2>
+                    
+                    <div class="form-group required">
+                        <label for="objectDescription">Описание объекта оценки</label>
+                        <textarea id="objectDescription" name="objectDescription" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="purpose">Цель оценки</label>
+                        <select id="purpose" name="purpose">
+                            <option value="">Выберите цель</option>
+                            <option value="deal">Сделка купли-продажи</option>
+                            <option value="mortgage">Ипотека/кредитование</option>
+                            <option value="inheritance">Наследство</option>
+                            <option value="court">Судебные разбирательства</option>
+                            <option value="insurance">Страхование</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgency">Срочность</label>
+                        <select id="urgency" name="urgency">
+                            <option value="standard">Стандартная (3-5 рабочих дней)</option>
+                            <option value="urgent">Срочная (1-2 рабочих дня) +20%</option>
+                            <option value="very-urgent">Очень срочно (в день обращения) +50%</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep(2)">Назад</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep(2)">Далее</button>
+                    </div>
+                </div>
+                
+                <!-- Шаг 3: Контактные данные -->
+                <div class="form-section" id="step3">
+                    <h2 class="section-title">Контактные данные</h2>
+                    
+                    <div class="form-group required">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comment">Комментарий (необязательно)</label>
+                        <textarea id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="checkbox" id="agree" name="agree" required>
+                        <label for="agree">Я согласен на обработку персональных данных</label>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep(3)">Назад</button>
+                        <button type="button" class="btn btn-accent" onclick="nextStep(3)">Отправить заявку</button>
+                    </div>
+                </div>
+                
+                <!-- Шаг 4: Подтверждение -->
+                <div class="form-section" id="step4">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="section-title" style="text-align: center;">Заявка успешно отправлена!</h2>
+                    <p style="text-align: center; margin-bottom: 2rem;">Наш специалист свяжется с вами в течение 30 минут для уточнения деталей.</p>
+                    
+                    <div class="order-summary">
+                        <h3>Детали вашей заявки:</h3>
+                        <p><strong>Тип услуги:</strong> <span id="summary-service"></span></p>
+                        <p><strong>Описание объекта:</strong> <span id="summary-description"></span></p>
+                        <p><strong>Контактное лицо:</strong> <span id="summary-name"></span></p>
+                        <p><strong>Телефон:</strong> <span id="summary-phone"></span></p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="index.html" class="btn">Вернуться на главную</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <!-- Футер -->
+    <footer class="animate" style="animation-delay: 0.3s">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Компания</h3>
+                <ul>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="services.html">Услуги</a></li>
+                    <li><a href="docs.html">Документы</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> г. Москва, ул. Примерная, 123</li>
+                    <li><i class="fas fa-phone"></i> +7 (495) 123-45-67</li>
+                    <li><i class="fas fa-envelope"></i> info@ocenka-expert.ru</li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2024 Оценочная компания "Эксперт". Все права защищены.</p>
+        </div>
+    </footer>
+    
+    <script src="js/script.js"></script>
+    <script>
+        // Выбор услуги
+        document.querySelectorAll('.service-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.service-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                document.getElementById('serviceType').value = this.dataset.service;
+            });
+        });
+        
+        // Навигация по шагам
+        let currentStep = 1;
+        
+        function nextStep(step) {
+            // Валидация перед переходом
+            if (step === 1 && !document.getElementById('serviceType').value) {
+                alert('Пожалуйста, выберите тип услуги');
+                return;
+            }
+            
+            if (step === 2 && !document.getElementById('objectDescription').value) {
+                alert('Пожалуйста, опишите объект оценки');
+                return;
+            }
+            
+            if (step === 3) {
+                if (!document.getElementById('name').value) {
+                    alert('Пожалуйста, укажите ваше имя');
+                    return;
+                }
+                
+                if (!document.getElementById('phone').value) {
+                    alert('Пожалуйста, укажите ваш телефон');
+                    return;
+                }
+                
+                if (!document.getElementById('agree').checked) {
+                    alert('Необходимо согласие на обработку персональных данных');
+                    return;
+                }
+                
+                // Подготовка данных для подтверждения
+                document.getElementById('summary-service').textContent = 
+                    document.querySelector('.service-option.selected h3').textContent;
+                document.getElementById('summary-description').textContent = 
+                    document.getElementById('objectDescription').value;
+                document.getElementById('summary-name').textContent = 
+                    document.getElementById('name').value;
+                document.getElementById('summary-phone').textContent = 
+                    document.getElementById('phone').value;
+                
+                // Здесь можно добавить отправку формы на сервер
+                // Например, через Fetch API или Formspree
+            }
+            
+            // Переход к следующему шагу
+            document.getElementById(`step${step}`).classList.remove('active');
+            document.getElementById(`step${step+1}`).classList.add('active');
+            
+            // Обновление индикаторов шагов
+            document.getElementById(`step${step}-indicator`).classList.remove('active');
+            document.getElementById(`step${step}-indicator`).classList.add('completed');
+            document.getElementById(`step${step+1}-indicator`).classList.add('active');
+            
+            currentStep = step + 1;
+        }
+        
+        function prevStep(step) {
+            document.getElementById(`step${step}`).classList.remove('active');
+            document.getElementById(`step${step-1}`).classList.add('active');
+            
+            document.getElementById(`step${step}-indicator`).classList.remove('active');
+            document.getElementById(`step${step-1}-indicator`).classList.add('active');
+            document.getElementById(`step${step-1}-indicator`).classList.remove('completed');
+            
+            currentStep = step - 1;
+        }
+        
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+            e.target.value = !x[2] ? x[1] : '+' + x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+        });
+    </script>
+</body>
+</html>
